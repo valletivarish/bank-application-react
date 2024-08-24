@@ -1,0 +1,39 @@
+/* Success.css */
+.success-container {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    height: 100vh;
+    background: #4CAF50; /* Green color for success */
+    color: #ffffff;
+    text-align: center;
+    padding: 20px;
+}
+
+.success-container h1 {
+    font-size: 4rem;
+    margin-bottom: 0.5rem;
+}
+
+.success-container p {
+    font-size: 1.2rem;
+    margin-bottom: 2rem;
+}
+
+.success-home-link {
+    color: #4CAF50;
+    text-decoration: none;
+    font-size: 1.1rem;
+    border: 1px solid #4CAF50;
+    padding: 10px 20px;
+    border-radius: 5px;
+    background-color: #ffffff;
+    transition: background-color 0.3s, color 0.3s;
+}
+
+.success-home-link:hover {
+    background-color: #4CAF50;
+    border: 1.5px solid #ffffff;
+    color: #fff;
+}
