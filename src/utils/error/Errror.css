@@ -35,8 +35,19 @@
     background-color: #e2e3e5;
     transition: background-color 0.3s, color 0.3s;
   }
+  .back-link{
+    margin-left: 10px;
+    color: #e07a5f;
+    text-decoration: none;
+    font-size: 1.1rem;
+    border: 1px solid #e07a5f;
+    padding: 10px 20px;
+    border-radius: 5px;
+    background-color: #e2e3e5;
+    transition: background-color 0.3s, color 0.3s;
+  }
   
-  .home-link:hover {
+  .home-link:hover,.back-link:hover {
     background-color: #e07a5f;
     border: 1.5px solid #ffffff;
     color: #fff;

@@ -1,0 +1,89 @@
+html, body {
+    margin: 0;
+    padding: 0;
+    height: 100%;
+    font-family: 'Verdana', sans-serif;
+    background: #f5f5f5;
+}
+
+.user-dashboard {
+    position: relative;
+    display: flex;
+    flex-direction: column;
+    min-height: 80vh;
+    background: #ffffff;
+    padding: 30px;
+    border-radius: 16px; 
+    box-shadow: 0 8px 15px rgba(0, 0, 0, 0.2);
+    margin: 20px auto;
+    max-width: 1200px;
+}
+
+.user-dashboard h1 {
+    text-align: center;
+    color: #333333;
+    margin-top: 60px;
+    margin-bottom: 20px;
+    font-size: 2.2rem;
+    font-weight: 600;
+}
+
+.user-button {
+    width: 70px;
+    height: 40px;
+    position: absolute;
+    right: 50px;
+    top: 20px;
+    background-color: #e07a5f;
+    color: #ffffff;
+    border: none;
+    border-radius: 8px;
+    cursor: pointer;
+    transition: background-color 0.3s;
+}
+
+.user-button:hover {
+    background-color: #d0624a;
+}
+
+.user-tabs {
+    display: flex;
+    justify-content: space-around;
+    margin-bottom: 20px;
+    border-radius: 16px;
+    background: #e07a5f;
+}
+
+.user-tab {
+    background: transparent;
+    border: none;
+    color: #ffffff;
+    padding: 12px 20px;
+    cursor: pointer;
+    font-size: 1.1rem;
+    font-weight: 500;
+    position: relative;
+    border-radius: 8px;
+    transition: background-color 0.3s, color 0.3s;
+}
+
+.user-tab:before {
+    content: "";
+    position: absolute;
+    bottom: 0;
+    left: 0;
+    width: 100%;
+    border-radius: 20px;
+    height: 3px;
+    background-color: transparent;
+    transition: background-color 0.3s;
+}
+
+.user-tab:hover:before,
+.user-tab.active:before {
+    background-color: #ffe5e5;
+}
+
+.user-tab:hover {
+    color: #ffffff;
+}

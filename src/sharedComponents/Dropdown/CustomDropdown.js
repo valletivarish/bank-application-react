@@ -6,7 +6,7 @@ const Dropdown = (props) => {
     const options = () => {
       const sizes = [];
       for (let i = 1; i < props.data.totalElements; i++) {
-        if (i % 5 === 0 && i < props.data.totalElements) {
+        if (i % 5 === 0 && i <= props.data.totalElements) {
           sizes.push(<option value={i}>{i}</option>);
         }
       }

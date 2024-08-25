@@ -1,14 +1,16 @@
 import React from "react";
-import { useNavigate } from "react-router-dom";
+import { useNavigate, useParams } from "react-router-dom";
 import { useState } from "react";
 import { useEffect } from "react";
 import Table from "../../../../sharedComponents/Table/Table";
-import { verifyAdmin } from "../../../../services/AuthenticationServices";
-import "./viewTransaction.css";
+import "./ViewPassbook.css";
 import { sanitizeTransactionData } from "../../../../utils/helpers/SanitizeData";
-import { getAllTransactions as fetchAllTransactions } from "../../../../services/AdminServices";
-import ViewTransactionFilter from "./ViewTransactionFilter";
-const ViewTransaction = () => {
+import ViewPassbookFilter from "./viewPassbookComponents/ViewPassbookFilter";
+import { fetchPassbook } from "../../../../services/CustomerServices";
+import { verifyUser } from "../../../../services/AuthenticationServices";
+const ViewPassbook = () => {
+  const routeParams=useParams();
+  const accountNumber=routeParams.accountNumber;
   const navigate = useNavigate();
   const [page, setPage] = useState(0);
   const [size, setSize] = useState(5);
@@ -17,23 +19,22 @@ const ViewTransaction = () => {
   const [sortBy, setSortBy] = useState("id");
   const [direction, setDirection] = useState("asc");
   const [transactions, setTransactions] = useState([]);
-  const [isAdmin, setIsAdmin] = useState(false);
+  const [isUser,setIsUser]=useState();
   const getAllTransactions = async () => {
+    
     try {
-      const data = await fetchAllTransactions(
+      const data = await fetchPassbook(
         from,
         to,
         page,
         size,
         sortBy,
-        direction
+        direction,
+        accountNumber
       );
       if (data && data.content) {
-        console.log(data);
         const sanitizedData = sanitizeTransactionData(data);
-        console.log(transactions);
         setTransactions(sanitizedData);
-        console.log(transactions);
       } else {
         setTransactions([]);
       }
@@ -47,23 +48,22 @@ const ViewTransaction = () => {
   }, [page, size, sortBy, direction,from,to]);
 
   useEffect(() => {
-    const checkAdmin = async () => {
-      const response = await verifyAdmin(localStorage.getItem("authToken"));
+    const checkUser = async () => {
+      const response = await verifyUser(localStorage.getItem("authToken"));
       console.log("Response", response);
       if (!response.data) {
         navigate("/");
         return;
       } else {
-        setIsAdmin(true);
+        setIsUser(true);
       }
     };
 
-    checkAdmin();
+    checkUser();
   }, [navigate]);
   return (
     <div className="view-transactions-container">
-      {isAdmin && (
-        <>
+        {isUser && (<>
           <div>
             <button
               className="button"
@@ -74,8 +74,8 @@ const ViewTransaction = () => {
               Back
             </button>
           </div>
-          <div className="title">View Transactions</div>
-          <ViewTransactionFilter
+          <div className="title">View Passbook</div>
+          <ViewPassbookFilter
             dataList={transactions.content && transactions.content.length > 0 ? Object.keys(transactions.content[0]) : []}
             setFromDate={setFromDate}
             setToDate={setToDate}
@@ -89,10 +89,10 @@ const ViewTransaction = () => {
             setDirection={setDirection}
             setSortBy={setSortBy}
           />
-        </>
-      )}
+        </>)}
+      
     </div>
   );
 };
 
-export default ViewTransaction;
+export default ViewPassbook;

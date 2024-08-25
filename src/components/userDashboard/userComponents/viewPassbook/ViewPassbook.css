@@ -1,0 +1,30 @@
+.button {
+    margin-top: 20px;
+    background-color: #e07a5f;
+    color: #ffffff;
+    border: 1px solid white;
+    border-radius: 3px;
+    padding: 12px;
+  }
+  .view-transactions-container {
+    margin: 40px auto;
+    padding: 30px;
+    max-width: 1200px;
+    background-color: #f9f9f9;
+    box-shadow: 0 6px 18px rgba(0, 0, 0, 0.1);
+    border-radius: 12px;
+    border: 1px solid #e0e0e0;
+  }
+  .button:hover {
+    cursor: pointer;
+    background-color: #ffffff;
+    color: #e07a5f;
+    border: 1px solid #e07a5f;
+  }
+  .title {
+    font-size: 24px;
+    color: #e07a5f;
+    text-align: center;
+    font-weight: 600;
+  }
+  

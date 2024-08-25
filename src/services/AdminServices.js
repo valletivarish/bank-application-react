@@ -25,6 +25,7 @@ export const getAllTransactions = async (
   direction
 ) => {
   try {
+    console.log(from,to);
     const response = await axios.get(
       `http://localhost:8080/api/bank/admin/transactions`,
       {
@@ -39,7 +40,21 @@ export const getAllTransactions = async (
     console.log(error);
   }
 };
-export const getByCustomerByID = () => {};
+export const GetCustomerById = async(customerID) => {
+  try {
+    const response = await axios.get(`http://localhost:8080/api/bank/admin/customers/${customerID}`,
+      {
+        headers: {
+          authorization: `Bearer ${localStorage.getItem("authToken")}`,
+          },
+        }
+        );
+      return response
+      }
+    catch(error){
+      console.log(error);
+    }
+};
 export const CreateCustomer = async (firstName, lastName, userId) => {
     try {
       const response = await axios.post(
@@ -63,7 +78,25 @@ export const CreateCustomer = async (firstName, lastName, userId) => {
     }
   };
   
-export const CreateAccount = () => {};
+  export const CreateAccount = async (bankId, customerId) => {
+    try {
+      const response = await axios.post(
+        `http://localhost:8080/api/bank/admin/banks/${bankId}/customers/${customerId}/accounts`,
+        {}, 
+        {
+          headers: {
+            Authorization: `Bearer ${localStorage.getItem("authToken")}`,
+            'Content-Type': 'application/json',
+          }
+        }
+      );
+      return response.data;
+    } catch (error) {
+      console.error('Error creating account:', error);
+      throw error;
+    }
+  };
+  
 export const ActivateAccount = () => {};
 export const DeactivateAccount = () => {};
 export const ActivateCustomer = async (customerID) => {

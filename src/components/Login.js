@@ -5,6 +5,7 @@ import './Login.css'
 import { useRef } from "react";
 import { ToastContainer} from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
+import { getUserByEmail } from "../services/CustomerServices";
 import { ValidationError,NotFoundError,UnAuthorized } from "../utils/error/ApiError";
 
 const Login = () => {
@@ -30,7 +31,12 @@ const Login = () => {
         if (roles.includes("ROLE_ADMIN")) {
           navigate("/admin-dashboard");
         } else {
-          navigate("/user-dashboard");
+          const user=await getUserByEmail(response.data.email);
+          const id=user.userId
+          localStorage.setItem('fullName',user.userName)
+          localStorage.setItem('id',id)
+          localStorage.setItem('email',user.email)
+          navigate(`/user-dashboard/${id}`);
         }
       }
     } catch (error) {

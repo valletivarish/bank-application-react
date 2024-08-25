@@ -1,0 +1,92 @@
+html, body {
+    margin: 0;
+    padding: 0;
+    height: 100%;
+    font-family: 'Verdana', sans-serif;
+    background: #f5f5f5;
+  }
+  
+  /* Container styling for the Profile page */
+  .profile-container {
+    display: flex;
+    flex-direction: column;
+    min-height: 80vh;
+    background: #ffffff;
+    padding: 30px;
+    border-radius: 16px;
+    box-shadow: 0 8px 15px rgba(0, 0, 0, 0.2);
+    margin: 20px auto;
+    max-width: 800px;
+  }
+  
+  /* Heading styling */
+  .profile-container h1 {
+    text-align: center;
+    color: #333333;
+    margin-bottom: 2rem;
+    font-size: 2rem;
+    font-weight: 600;
+  }
+  
+  /* Form group styling */
+  .form-group {
+    margin-bottom: 16px;
+    position: relative; /* Allows the icon to be absolutely positioned */
+  }
+  
+  .form-group label {
+    display: block;
+    margin-bottom: 8px;
+    font-weight: 500;
+  }
+  
+  /* Input field styling */
+  .form-control {
+    width: 100%;
+    padding: 10px;
+    padding-right: 30px; /* Adds space for the icon */
+    border: 1px solid #dcdcdc;
+    border-radius: 6px;
+    font-size: 1rem;
+    background: #ffffff;
+  }
+  
+  .form-control:disabled {
+    background-color: #f5f5f5;
+    cursor: not-allowed;
+  }
+  
+
+  .edit-icon {
+    position: absolute;
+    right: 10px;
+    top: 65%;
+    transform: translateY(-50%);
+    font-size: 1rem; 
+    color: #e07a5f;
+    cursor: pointer;
+  }
+  
+  .edit-icon:hover {
+    color: #d1603d;
+  }
+  
+  /* Submit button */
+  .submit-button {
+    background-color: #e07a5f;
+    color: #ffffff;
+    border: 1px solid white;
+    border-radius: 5px;
+    padding: 12px 16px;
+    margin-top: 20px;
+    cursor: pointer;
+    font-size: 1rem;
+    transition: background-color 0.3s, color 0.3s;
+    width: 100%;
+  }
+  
+  .submit-button:hover {
+    background-color: #ffffff;
+    color: #e07a5f;
+    border: 1px solid #e07a5f;
+  }
