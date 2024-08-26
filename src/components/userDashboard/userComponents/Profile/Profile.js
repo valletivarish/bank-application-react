@@ -40,6 +40,7 @@ const Profile = () => {
     try {
       await updateUser(user.firstName,user.lastName,user.email);
       success("Profile updated successfully!");
+      localStorage.setItem("fullName",user.firstName+" "+user.lastName);
       setEditableField(null); 
     } catch (error) {
       console.error("Failed to update profile:", error);

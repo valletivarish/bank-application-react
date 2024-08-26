@@ -12,6 +12,7 @@ const UserDashboard = () => {
     const [isUser,setIsUser]=useState(false);
     const routeParams = useParams();
     const navigate = useNavigate();
+    const [userName,setUserName]=useState("User");
 
     const handleLogout = () => {
         localStorage.clear();
@@ -41,9 +42,10 @@ const UserDashboard = () => {
         };
     
         checkUser();
+        setUserName(localStorage.getItem("fullName"));
       }, [navigate]);
 
-    const userName = localStorage.getItem("fullName") || 'User';
+    
 
     return (
         <div className="user-dashboard">

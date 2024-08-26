@@ -44,7 +44,7 @@ const CustomPagination = (props) => {
             className={`pagination-item ${i === page ? "active" : ""}`}
             onClick={() => setPage(i)}
           >
-            {i + 1} {/* Displaying 1-based index */}
+            {i + 1}
           </BootstrapPagination.Item>
         );
       }

@@ -47,7 +47,7 @@ const AdminDashboard = () => {
     try {
       const response = await GetCustomerById(customerId);
       if (response) {
-        navigate(`/admin-dashboard/confirm-account-creation?bankId=${bankId}&customerId=${customerId}`);
+        navigate(`/admin-dashboard/bank/${bankId}/customer/${customerId}/account`);
         handleCloseAccountModal();
       }
       // } else {

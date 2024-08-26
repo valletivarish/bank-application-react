@@ -1,5 +1,5 @@
 import React from 'react';
-import { useNavigate, useSearchParams } from 'react-router-dom';
+import { useNavigate, useParams } from 'react-router-dom';
 import './ConfirmAccountCreation.css';
 import { success, failure } from '../../../../utils/Toast';
 import { CreateAccount } from '../../../../services/AdminServices';
@@ -7,10 +7,9 @@ import { ToastContainer } from 'react-toastify';
 
 const ConfirmAccountCreation = () => {
   const navigate = useNavigate();
-  const [searchParams] = useSearchParams();
-  
-  const bankId = searchParams.get('bankId');
-  const customerId = searchParams.get('customerId');
+  const params = useParams();
+  const bankId=params.bankId;
+  const customerId=params.customerId
 
   const handleConfirm = async () => {
     try {
@@ -19,7 +18,7 @@ const ConfirmAccountCreation = () => {
       if (response) {
         success("Account Created Successfully");
         setTimeout(()=>{
-          navigate('/admin-dashboard/view-accounts');
+          navigate('/admin-dashboard');
         },8000)
       } else {
         failure("Failed to Create Account");
