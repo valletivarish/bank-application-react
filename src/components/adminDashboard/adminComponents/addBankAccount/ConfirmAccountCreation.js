@@ -4,14 +4,17 @@ import './ConfirmAccountCreation.css';
 import { success, failure } from '../../../../utils/Toast';
 import { CreateAccount } from '../../../../services/AdminServices';
 import { ToastContainer } from 'react-toastify';
+import { useState } from 'react';
 
 const ConfirmAccountCreation = () => {
   const navigate = useNavigate();
   const params = useParams();
   const bankId=params.bankId;
   const customerId=params.customerId
+  const [loading,setLoading]=useState(false);
 
   const handleConfirm = async () => {
+    setLoading(true);
     try {
       const response = await CreateAccount(bankId, customerId);
       console.log(response);
@@ -24,8 +27,15 @@ const ConfirmAccountCreation = () => {
         failure("Failed to Create Account");
       }
     } catch (error) {
-      console.error("Error creating account:", error);
-      failure("An error occurred while creating the account");
+      const statusCode = error.statusCode || "Unknown";
+      const errorMessage = error.message || "An error occurred";
+      const errorType = error.errorType || "Error";
+      navigate(`/error/${statusCode}`, {
+        state: { status: statusCode, errorMessage, errorType },
+      });
+    }
+    finally{
+      setLoading(false);
     }
   };
 
@@ -42,8 +52,8 @@ const ConfirmAccountCreation = () => {
         <p><strong>Customer ID:</strong> {customerId}</p>
       </div>
       <div className="confirmation-actions">
-        <button className="btn btn-primary" onClick={handleConfirm}>
-          Confirm
+        <button className="btn btn-primary" onClick={handleConfirm} disabled={loading}>
+        {loading ? "Confirming Account..." : "Confirm Account Creation"}
         </button>
         <button className="btn btn-secondary" onClick={handleCancel}>
           Cancel

@@ -33,13 +33,15 @@ const AdminDashboard = () => {
       if (response) {
         navigate(`/admin-dashboard/add-customer/${userId}`);
         handleCloseModal();
-      } else {
-        navigate('/error');
-        handleCloseModal();
-      }
-    } catch {
-      navigate('/error');
+      } 
+    } catch(error) {
       handleCloseModal();
+      const statusCode = error.statusCode || "Unknown";
+      const errorMessage = error.message || "An error occurred";
+      const errorType = error.errorType || "Error";
+      navigate(`/error/${statusCode}`, {
+        state: { status: statusCode, errorMessage, errorType },
+      });
     }
   };
 
@@ -54,9 +56,14 @@ const AdminDashboard = () => {
       //   navigate('/error');
       //   handleCloseAccountModal();
       // }
-    } catch {
-      navigate('/error');
+    } catch(error) {
       handleCloseAccountModal();
+      const statusCode = error.statusCode || "Unknown";
+      const errorMessage = error.message || "An error occurred";
+      const errorType = error.errorType || "Error";
+      navigate(`/error/${statusCode}`, {
+        state: { status: statusCode, errorMessage, errorType },
+      });
     }
   };
 

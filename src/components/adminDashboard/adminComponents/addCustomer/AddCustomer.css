@@ -51,12 +51,12 @@ html, body {
     border-color: #e07a5f;
   }
   
-  .error {
+  /* .error {
     color: #ff5c5c;
     font-size: 1rem;
     margin-bottom: 16px;
     text-align: center;
-  }
+  } */
   
   .submit-button {
     background-color: #e07a5f;
@@ -76,3 +76,26 @@ html, body {
     color: #e07a5f;
     border: 1px solid #e07a5f;
   }
+
+  
+  .submit-button:disabled {
+    background-color: #f2a97d;
+  color: #ffffff;
+  cursor: not-allowed;
+  border: 1px solid #f2a97d;
+  }
+  .btn-primary:disabled {
+    background-color: #f2a97d; 
+    color: #ffffff;
+  }
+  .btn-secondary:disabled {
+    background-color: #f2a97d;
+    color: #ffffff;
+  }
+  .submit-button:disabled:hover{
+    background-color: #f2a97d;
+  color: #ffffff;
+  cursor: not-allowed;
+  border: 1px solid #f2a97d;
+  }
+  

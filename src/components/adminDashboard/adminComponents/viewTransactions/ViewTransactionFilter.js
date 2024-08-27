@@ -2,6 +2,7 @@ import React from "react";
 import "./ViewTransactionFilter.css";
 
 const ViewTransactionFilter = (props) => {
+  const { setSearchParams, searchParams,setSearchCount,searchCount } = props;
   const options = props.dataList
     .filter(
       (key) =>
@@ -23,25 +24,31 @@ const ViewTransactionFilter = (props) => {
       "select[name='direction']"
     ).value;
 
+    const currentParams=Object.fromEntries(searchParams);
+
     if (directionValue !== "Direction") {
-      props.setDirection(directionValue);
+      currentParams.direction = directionValue;
     }
     if (sortByValue !== "Sort By") {
-      props.setSortBy(sortByValue);
+      currentParams.sortBy = sortByValue;
     }
-    props.setFromDate(fromValue);
-    props.setToDate(toValue);
+    if(fromValue!=""){
+      currentParams.from=fromValue;
+    }
+    if(toValue!=""){
+      currentParams.to=toValue;
+    }
+    setSearchParams(currentParams);
+    setSearchCount(searchCount-1);
   };
 
   const reset = () => {
-    props.setFromDate("");
-    props.setToDate("");
-    props.setSortBy("id");
-    props.setDirection("asc");
     document.querySelector("input[name='from']").value = "";
     document.querySelector("input[name='to']").value = "";
     document.querySelector("select[name='sortBy']").value = "Sort By";
     document.querySelector("select[name='direction']").value = "Direction";
+    setSearchParams([]);
+    setSearchCount(searchCount-1);
   };
 
   return (

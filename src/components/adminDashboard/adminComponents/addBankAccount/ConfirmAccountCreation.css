@@ -72,4 +72,21 @@
   .btn-secondary:active {
     transform: scale(0.98);
   }
+
+  .btn:disabled {
+    background-color: #ccc;
+    color: #999;
+    cursor: not-allowed;
+    transform: none;
+  }
+  
+  .btn-primary:disabled {
+    background-color: #b3d7ff; 
+    color: #fff;
+  }
+  
+  .btn-secondary:disabled {
+    background-color: #b3b3b3; 
+    color: #fff;
+  }
   

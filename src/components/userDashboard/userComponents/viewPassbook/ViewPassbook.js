@@ -1,5 +1,5 @@
 import React from "react";
-import { useNavigate, useParams } from "react-router-dom";
+import { useNavigate, useParams, useSearchParams } from "react-router-dom";
 import { useState } from "react";
 import { useEffect } from "react";
 import Table from "../../../../sharedComponents/Table/Table";
@@ -12,12 +12,14 @@ const ViewPassbook = () => {
   const routeParams=useParams();
   const accountNumber=routeParams.accountNumber;
   const navigate = useNavigate();
-  const [page, setPage] = useState(0);
-  const [size, setSize] = useState(5);
-  const [from, setFromDate] = useState();
-  const [to, setToDate] = useState();
-  const [sortBy, setSortBy] = useState("id");
-  const [direction, setDirection] = useState("asc");
+  const [searchParams,setSearchParams]=useSearchParams();
+  const page=parseInt(searchParams.get("page")) || 0;
+  const size=parseInt(searchParams.get("size")) || 5;
+  const from=searchParams.get("from") || "";
+  const to = searchParams.get("to") || "";
+  const sortBy = searchParams.get("sortBy") || "id";
+  const direction=searchParams.get("direction") || "asc";
+  const [searchCount,setSearchCount]=useState(-1);
   const [transactions, setTransactions] = useState([]);
   const [isUser,setIsUser]=useState();
   const getAllTransactions = async () => {
@@ -45,7 +47,7 @@ const ViewPassbook = () => {
 
   useEffect(() => {
     getAllTransactions();
-  }, [page, size, sortBy, direction,from,to]);
+  }, [searchParams]);
 
   useEffect(() => {
     const checkUser = async () => {
@@ -68,7 +70,8 @@ const ViewPassbook = () => {
             <button
               className="button"
               onClick={() => {
-                navigate(-1);
+                navigate(searchCount);
+                setSearchCount(-1);
               }}
             >
               Back
@@ -77,17 +80,17 @@ const ViewPassbook = () => {
           <div className="title">View Passbook</div>
           <ViewPassbookFilter
             dataList={transactions.content && transactions.content.length > 0 ? Object.keys(transactions.content[0]) : []}
-            setFromDate={setFromDate}
-            setToDate={setToDate}
-            setSortBy={setSortBy}
-            setDirection={setDirection}
+            setSearchCount={setSearchCount}
+            searchCount={searchCount}
+            searchParams={searchParams}
+            setSearchParams={setSearchParams}
           />
           <Table
             data={transactions}
-            setPage={setPage}
-            setSize={setSize}
-            setDirection={setDirection}
-            setSortBy={setSortBy}
+            setSearchCount={setSearchCount}
+            searchCount={searchCount}
+            searchParams={searchParams}
+            setSearchParams={setSearchParams}
           />
         </>)}
       

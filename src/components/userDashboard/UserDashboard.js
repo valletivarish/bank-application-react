@@ -33,7 +33,6 @@ const UserDashboard = () => {
     useEffect(() => {
         const checkUser = async () => {
           const response = await verifyUser(localStorage.getItem("authToken"));
-          console.log(response)
           if (!response.data) {
             navigate('/');
           } else {

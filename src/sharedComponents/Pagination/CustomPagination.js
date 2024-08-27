@@ -3,7 +3,8 @@ import { Pagination as BootstrapPagination } from "react-bootstrap";
 import "./Pagination.css";
 
 const CustomPagination = (props) => {
-  const { setPage, data } = props;
+  const { data, setSearchParams, searchParams, setSearchCount, searchCount } =
+    props;
   const { totalPages, page } = data;
 
   const renderPaginationItems = () => {
@@ -16,7 +17,12 @@ const CustomPagination = (props) => {
           <BootstrapPagination.Item
             key="first"
             className="pagination-control"
-            onClick={() => setPage(0)}
+            onClick={() =>{
+              const currentParams=Object.fromEntries(searchParams);
+              currentParams.page=0;
+              setSearchParams(currentParams);
+              setSearchCount(searchCount-1);
+            }}
           >
             &lt;&lt;&lt;
           </BootstrapPagination.Item>
@@ -29,7 +35,12 @@ const CustomPagination = (props) => {
           <BootstrapPagination.Item
             key="prev"
             className="pagination-control"
-            onClick={() => setPage(page - 1)}
+            onClick={() => {
+              const currentParams = Object.fromEntries(searchParams);
+              currentParams.page = page - 1;
+              setSearchParams(currentParams);
+              setSearchCount(searchCount-1);
+            }}
           >
             &lt;&lt;
           </BootstrapPagination.Item>
@@ -42,7 +53,12 @@ const CustomPagination = (props) => {
           <BootstrapPagination.Item
             key={i}
             className={`pagination-item ${i === page ? "active" : ""}`}
-            onClick={() => setPage(i)}
+            onClick={() => {
+              const currentParams = Object.fromEntries(searchParams);
+              currentParams.page = i;
+              setSearchParams(currentParams);
+              setSearchCount(searchCount-1);
+            }}
           >
             {i + 1}
           </BootstrapPagination.Item>
@@ -55,7 +71,12 @@ const CustomPagination = (props) => {
           <BootstrapPagination.Item
             key="next"
             className="pagination-control"
-            onClick={() => setPage(page + 1)}
+            onClick={() => {
+              const currentParams = Object.fromEntries(searchParams);
+              currentParams.page = page + 1;
+              setSearchParams(currentParams);
+              setSearchCount(searchCount-1);
+            }}
           >
             &gt;&gt;
           </BootstrapPagination.Item>
@@ -68,7 +89,12 @@ const CustomPagination = (props) => {
           <BootstrapPagination.Item
             key="last"
             className="pagination-control"
-            onClick={() => setPage(totalPages - 1)}
+            onClick={() => {
+              const currentParams = Object.fromEntries(searchParams);
+              currentParams.page = totalPages - 1;
+              setSearchParams(currentParams);
+              setSearchCount(searchCount-1);
+            }}
           >
             &gt;&gt;&gt;
           </BootstrapPagination.Item>

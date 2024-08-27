@@ -26,7 +26,7 @@ function App() {
       <Route exact path='/?(.*)' element={<Login/>} />
       <Route exact path='/' element={<Login/>} />
       <Route exact path='/register' element={<Register/>} />
-      <Route exact path='/error' element={<Error/>} />
+      <Route exact path='/error/:code' element={<Error/>} />
       <Route path="/admin-dashboard/bank/:bankId/customer/:customerId/account" element={<ConfirmAccountCreation />} />
       <Route exact path='/success' element={<Success/>} />
       <Route exact path='/admin-dashboard' element={<AdminDashboard/>}/>

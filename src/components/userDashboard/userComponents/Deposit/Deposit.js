@@ -14,22 +14,28 @@ const Deposit = () => {
   const [selectedAccount, setSelectedAccount] = useState("");
   const [amount, setAmount] = useState("");
   const [isUser, setIsUser] = useState();
+  const [loading,setLoading]=useState();
   const navigate = useNavigate();
 
   useEffect(() => {
-    const loadAccounts = async () => {
-      try {
-        const data = await fetchAllAccounts();
-        setAccounts(data);
-      } catch (error) {
-        console.error("Error fetching accounts:", error);
-      }
-    };
-
     loadAccounts();
   }, []);
+  const loadAccounts = async () => {
+    try {
+      const data = await fetchAllAccounts();
+      setAccounts(data);
+    } catch (error) {
+      const statusCode = error.statusCode || "Unknown";
+      const errorMessage = error.message || "An error occurred";
+      const errorType = error.errorType || "Error";
+      navigate(`/error/${statusCode}`, {
+        state: { status: statusCode, errorMessage, errorType },
+      });
+    }
+  };
 
   const handleSubmit = async (e) => {
+    setLoading(true);
     e.preventDefault();
     if (!selectedAccount || !amount) {
       failure("All fields are required.");
@@ -46,13 +52,20 @@ const Deposit = () => {
       setSelectedAccount("");
       setAmount("");
     } catch (error) {
-      failure("Failed to perform deposit.");
+      const statusCode = error.statusCode || "Unknown";
+      const errorMessage = error.message || "An error occurred";
+      const errorType = error.errorType || "Error";
+      navigate(`/error/${statusCode}`, {
+        state: { status: statusCode, errorMessage, errorType },
+      });
+    }
+    finally{
+      setLoading(false);
     }
   };
   useEffect(() => {
     const checkUser = async () => {
       const response = await verifyUser(localStorage.getItem("authToken"));
-      console.log(response);
       if (!response.data) {
         navigate("/");
       } else {
@@ -108,8 +121,8 @@ const Deposit = () => {
                 required
               />
             </div>
-            <button type="submit" className="submit-button">
-              Deposit
+            <button type="submit" className="submit-button" disabled={loading}>
+            {loading ? "Hang Tight, We're Processing Your Deposit..." : "Make Deposit"}
             </button>
           </form>
           <ToastContainer />

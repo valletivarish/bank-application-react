@@ -2,18 +2,20 @@ import React, { useEffect, useState } from "react";
 import { sanitizeData } from "../../../../utils/helpers/SanitizeData";
 import { getAllCustomers as fetchAllCustomers } from "../../../../services/AdminServices";
 import Table from "../../../../sharedComponents/Table/Table";
-import { useNavigate } from "react-router-dom";
+import { useNavigate, useSearchParams } from "react-router-dom";
 import "./ViewCustomers.css";
 import ViewCustomersFilter from "../viewCustomers/ViewCustomersFilter";
 import { verifyAdmin } from "../../../../services/AuthenticationServices";
 
 const ViewCustomers = () => {
   const navigate = useNavigate();
-  const [page, setPage] = useState(0);
-  const [size, setSize] = useState(5);
-  const [sortBy, setSortBy] = useState("id");
-  const [direction, setDirection] = useState("asc");
-  const [customers, setCustomers] = useState({});
+  const [customers, setCustomers] = useState([]);
+  const [searchCount, setSearchCount] = useState(-1);
+  const [searchParams, setSearchParams] = useSearchParams();
+  const page = parseInt(searchParams.get("page")) || 0;
+  const size = parseInt(searchParams.get("size")) || 5;
+  const sortBy = searchParams.get("sortBy") || "id";
+  const direction = searchParams.get("direction") || "asc";
   const [isAdmin, setIsAdmin] = useState(false);
 
   const getAllCustomers = async () => {
@@ -25,25 +27,29 @@ const ViewCustomers = () => {
           ["customer_id", "firstName", "lastName", "email", "active"],
           setCustomers
         );
-        console.log(sanitizedData)
         setCustomers(sanitizedData);
       } else {
         setCustomers([]);
       }
     } catch (error) {
-      console.error("Error fetching customers:", error);
+      const statusCode = error.statusCode || "Unknown";
+      const errorMessage = error.message || "An error occurred";
+      const errorType = error.errorType || "Error";
+      navigate(`/error/${statusCode}`, {
+        state: { status: statusCode, errorMessage, errorType },
+      });
     }
   };
 
   useEffect(() => {
     getAllCustomers();
-  }, [page, size, sortBy, direction]);
+  }, [searchParams]);
 
   useEffect(() => {
     const checkAdmin = async () => {
       const response = await verifyAdmin(localStorage.getItem("authToken"));
       if (!response.data) {
-        navigate('/');
+        navigate("/");
         return;
       } else {
         setIsAdmin(true);
@@ -61,7 +67,8 @@ const ViewCustomers = () => {
             <button
               className="button"
               onClick={() => {
-                navigate(-1);
+                navigate(searchCount);
+                setSearchCount(-1);
               }}
             >
               Back
@@ -69,16 +76,18 @@ const ViewCustomers = () => {
           </div>
           <div className="title">View Customers</div>
           <ViewCustomersFilter
-            setSortBy={setSortBy}
-            setDirection={setDirection}
             data={customers}
+            setSearchCount={setSearchCount}
+            searchCount={searchCount}
+            searchParams={searchParams}
+            setSearchParams={setSearchParams}
           />
           <Table
             data={customers}
-            setPage={setPage}
-            setSize={setSize}
-            setDirection={setDirection}
-            setSortBy={setSortBy}
+            setSearchCount={setSearchCount}
+            searchCount={searchCount}
+            searchParams={searchParams}
+            setSearchParams={setSearchParams}
           />
         </>
       )}

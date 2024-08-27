@@ -29,7 +29,12 @@ const ViewPassbookModal = ({
         }));
          setOptions(accountOptions);
       } catch (error) {
-        console.error('Error fetching accounts:', error);
+        const statusCode = error.statusCode || "Unknown";
+            const errorMessage = error.message || "An error occurred";
+            const errorType = error.errorType || "Error";
+            navigate(`/error/${statusCode}`, {
+              state: { status: statusCode, errorMessage, errorType },
+            });
       }
     };
 

@@ -1,81 +1,95 @@
 import axios from "axios";
-import { ValidationError, NotFoundError, UnAuthorized } from "../utils/error/ApiError";
+import {
+  ValidationError,
+  NotFoundError,
+  UnAuthorized,
+  InternalServerError,
+} from "../utils/error/ApiError";
 
 export const signin = async (email, password) => {
   try {
     const response = await axios.post(`http://localhost:8080/api/auth/signin`, {
-      email: email,
-      password: password,
+      email,
+      password,
     });
 
     return response;
   } catch (error) {
     if (error.response) {
-      const { status, data } = error.response;
-
+      const { status, message } = error.response.data;
+      console.log(error.response.data)
       if (status === 400) {
-        throw new ValidationError(data.message || "Failed to sign in. Please check your credentials and try again.");
+        throw new ValidationError(message || "Internal Server Error");
       }
       if (status === 404) {
-        throw new NotFoundError(data.message || "User not found.");
+        throw new NotFoundError(message || "Not Found");
       }
       if (status === 401) {
-        throw new UnAuthorized(data.message || "Unauthorized access.");
+        throw new UnAuthorized(message || "Unauthorized");
       }
-      if (status === 500) {
-        throw new Error(data.message || "An unexpected error occurred on the server. Please try again later.");
-      }
+    } else {
+      throw new InternalServerError("Internal Server Error");
     }
-
-    throw new Error("An unexpected error occurred. Please try again later.");
   }
 };
-export const signup=async (user)=>{
+export const signup = async (user) => {
   try {
-    const response = await axios.post(`http://localhost:8080/api/auth/signup`, user);
+    const response = await axios.post(
+      `http://localhost:8080/api/auth/signup`,
+      user
+    );
     return response;
-    } catch (error) {
-      if (error.response) {
-        const { status, data } = error.response;
-        if (status === 400) {
-          throw new ValidationError(data.message || "Something error occured")
-          }
-        }
+  } catch (error) {
+    if (error.response) {
+      const { status, message } = error.response.data;
+      if (status === 400) {
+        throw new ValidationError(message || "Internal Server Error");
       }
-
-
-}
+      if (status === 404) {
+        throw new NotFoundError(message || "Not Found");
+      }
+      if (status === 401) {
+        throw new UnAuthorized(message || "Unauthorized");
+      }
+    } else {
+      throw new InternalServerError("Internal Server Error")
+    }
+  }
+};
 
 export const verifyAdmin = async (token) => {
-  if(token==null){
+  if (token == null) {
     return false;
   }
   try {
-    const response = await axios.get(`http://localhost:8080/api/auth/verifyAdmin`, {
-      params: {
-        auth:token
-      },
-    });
+    const response = await axios.get(
+      `http://localhost:8080/api/auth/verifyAdmin`,
+      {
+        params: {
+          auth: token,
+        },
+      }
+    );
     return response;
   } catch (error) {
-    console.error(error);
     return null;
   }
 };
 export const verifyUser = async (token) => {
-  if(token==null){
+  if (token == null) {
     return false;
   }
   try {
-    const response = await axios.get(`http://localhost:8080/api/auth/verifyUser`, {
-      params: {
-        auth:token
-      },
-    });
+    const response = await axios.get(
+      `http://localhost:8080/api/auth/verifyUser`,
+      {
+        params: {
+          auth: token,
+        },
+      }
+    );
     return response;
   } catch (error) {
-    console.error(error);
     return null;
   }
 };
-

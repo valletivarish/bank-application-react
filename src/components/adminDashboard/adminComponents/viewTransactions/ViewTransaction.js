@@ -5,17 +5,20 @@ import { useEffect } from "react";
 import Table from "../../../../sharedComponents/Table/Table";
 import { verifyAdmin } from "../../../../services/AuthenticationServices";
 import "./viewTransaction.css";
+import { useSearchParams } from "react-router-dom";
 import { sanitizeTransactionData } from "../../../../utils/helpers/SanitizeData";
 import { getAllTransactions as fetchAllTransactions } from "../../../../services/AdminServices";
 import ViewTransactionFilter from "./ViewTransactionFilter";
 const ViewTransaction = () => {
+  const [searchParams, setSearchParams] = useSearchParams();
   const navigate = useNavigate();
-  const [page, setPage] = useState(0);
-  const [size, setSize] = useState(5);
-  const [from, setFromDate] = useState();
-  const [to, setToDate] = useState();
-  const [sortBy, setSortBy] = useState("id");
-  const [direction, setDirection] = useState("asc");
+  const from=searchParams.get("from") || "";
+  const to=searchParams.get("to") || "";
+  const page=parseInt(searchParams.get("page")) || 0;
+  const size=parseInt(searchParams.get("size")) || 5;
+  const sortBy=searchParams.get("sortBy") || "id";
+  const direction=searchParams.get("direction") || "asc";
+  const [searchCount,setSearchCount]=useState(-1);
   const [transactions, setTransactions] = useState([]);
   const [isAdmin, setIsAdmin] = useState(false);
   const getAllTransactions = async () => {
@@ -29,27 +32,28 @@ const ViewTransaction = () => {
         direction
       );
       if (data && data.content) {
-        console.log(data);
         const sanitizedData = sanitizeTransactionData(data);
-        console.log(transactions);
         setTransactions(sanitizedData);
-        console.log(transactions);
       } else {
         setTransactions([]);
       }
     } catch (error) {
-      console.error("Error fetching customers:", error);
+      const statusCode = error.statusCode || "Unknown";
+      const errorMessage = error.message || "An error occurred";
+      const errorType = error.errorType || "Error";
+      navigate(`/error/${statusCode}`, {
+        state: { status: statusCode, errorMessage, errorType },
+      });
     }
   };
 
   useEffect(() => {
     getAllTransactions();
-  }, [page, size, sortBy, direction,from,to]);
+  }, [searchParams]);
 
   useEffect(() => {
     const checkAdmin = async () => {
       const response = await verifyAdmin(localStorage.getItem("authToken"));
-      console.log("Response", response);
       if (!response.data) {
         navigate("/");
         return;
@@ -68,7 +72,8 @@ const ViewTransaction = () => {
             <button
               className="button"
               onClick={() => {
-                navigate(-1);
+                navigate(searchCount);
+                setSearchCount(-1);
               }}
             >
               Back
@@ -77,17 +82,17 @@ const ViewTransaction = () => {
           <div className="title">View Transactions</div>
           <ViewTransactionFilter
             dataList={transactions.content && transactions.content.length > 0 ? Object.keys(transactions.content[0]) : []}
-            setFromDate={setFromDate}
-            setToDate={setToDate}
-            setSortBy={setSortBy}
-            setDirection={setDirection}
+            setSearchCount={setSearchCount}
+            searchCount={searchCount}
+            searchParams={searchParams}
+            setSearchParams={setSearchParams}
           />
           <Table
             data={transactions}
-            setPage={setPage}
-            setSize={setSize}
-            setDirection={setDirection}
-            setSortBy={setSortBy}
+            setSearchCount={setSearchCount}
+            searchCount={searchCount}
+            searchParams={searchParams}
+            setSearchParams={setSearchParams}
           />
         </>
       )}

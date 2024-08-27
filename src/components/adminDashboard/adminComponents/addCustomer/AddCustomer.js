@@ -13,6 +13,7 @@ const AddCustomer = () => {
   const [firstName, setFirstName] = useState("");
   const [lastName, setLastName] = useState("");
   const [email, setEmail] = useState("");
+  const [loading,setLoading]=useState(false);
   const [isAdmin, setIsAdmin] = useState(false);
 
   useEffect(() => {
@@ -48,6 +49,7 @@ const AddCustomer = () => {
   }, [navigate]);
 
   const handleSubmit = async (e) => {
+    setLoading(true)
     e.preventDefault();
     try {
       await CreateCustomer(firstName, lastName, userId);
@@ -60,7 +62,15 @@ const AddCustomer = () => {
       );
       navigate("/success");
     } catch (error) {
-      navigate("/error");
+      const statusCode = error.statusCode || "Unknown";
+      const errorMessage = error.message || "An error occurred";
+      const errorType = error.errorType || "Error";
+      navigate(`/error/${statusCode}`, {
+        state: { status: statusCode, errorMessage, errorType },
+      });
+    }
+    finally {
+      setLoading(false);
     }
   };
 
@@ -112,8 +122,8 @@ const AddCustomer = () => {
                 readOnly
               />
             </div>
-            <button type="submit" className="submit-button">
-              Submit
+            <button type="submit" className="submit-button" disabled={loading}>
+            {loading ? "Creating Customer..." : "Add Customer"}
             </button>
           </form>
         </>
