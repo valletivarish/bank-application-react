@@ -2,12 +2,12 @@ import React, { useState, useEffect } from "react";
 import {
   fetchAllAccounts,
   depositAmount,
-} from "../../../../services/CustomerServices"; // Adjust the import path as needed
+} from "../../../../services/customerServices"; // Adjust the import path as needed
 import { failure, success } from "../../../../utils/Toast";
 import { ToastContainer } from "react-toastify";
 import { useNavigate } from "react-router-dom";
 import "./Deposit.css";
-import { verifyUser } from "../../../../services/AuthenticationServices";
+import { verifyUser } from "../../../../services/authenticationServices";
 
 const Deposit = () => {
   const [accounts, setAccounts] = useState([]);
@@ -16,6 +16,8 @@ const Deposit = () => {
   const [isUser, setIsUser] = useState();
   const [loading,setLoading]=useState();
   const navigate = useNavigate();
+  const [hasError,setHasError]=useState(false);
+  const [message,setMessage]=useState();
 
   useEffect(() => {
     loadAccounts();
@@ -25,17 +27,14 @@ const Deposit = () => {
       const data = await fetchAllAccounts();
       setAccounts(data);
     } catch (error) {
-      const statusCode = error.statusCode || "Unknown";
       const errorMessage = error.message || "An error occurred";
-      const errorType = error.errorType || "Error";
-      navigate(`/error/${statusCode}`, {
-        state: { status: statusCode, errorMessage, errorType },
-      });
+      setHasError(true);
+      setMessage(errorMessage);
     }
   };
 
   const handleSubmit = async (e) => {
-    setLoading(true);
+
     e.preventDefault();
     if (!selectedAccount || !amount) {
       failure("All fields are required.");
@@ -47,6 +46,7 @@ const Deposit = () => {
     }
 
     try {
+      setLoading(true);
       await depositAmount(selectedAccount, amount);
       success("Deposit completed successfully!");
       setSelectedAccount("");
@@ -99,6 +99,7 @@ const Deposit = () => {
                 id="account"
                 className="form-control"
                 value={selectedAccount}
+                disabled={hasError}
                 onChange={(e) => setSelectedAccount(e.target.value)}
                 required
               >
@@ -117,11 +118,13 @@ const Deposit = () => {
                 id="amount"
                 className="form-control"
                 value={amount}
+                disabled={hasError}
                 onChange={(e) => setAmount(e.target.value)}
                 required
               />
             </div>
-            <button type="submit" className="submit-button" disabled={loading}>
+            {hasError && <p style={{color:"red",fontWeight:600,textAlign:"center"}}>{message}</p>}
+            <button type="submit" className="submit-button" disabled={loading || hasError}>
             {loading ? "Hang Tight, We're Processing Your Deposit..." : "Make Deposit"}
             </button>
           </form>

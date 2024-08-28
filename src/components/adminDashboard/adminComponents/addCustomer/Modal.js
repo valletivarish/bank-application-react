@@ -1,6 +1,6 @@
 // import 'bootstrap/dist/css/bootstrap.min.css';
 import React from 'react';
-import './Modal.css'
+import '../../../../utils/Modal/Modal.css'
 import { Modal as BootstrapModal, Button } from 'react-bootstrap';
 
 const Modal = ({ show, handleClose, handleAddCustomer, userId, setUserId }) => {

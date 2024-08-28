@@ -6,8 +6,8 @@ import Table from "../../../../sharedComponents/Table/Table";
 import "./ViewPassbook.css";
 import { sanitizeTransactionData } from "../../../../utils/helpers/SanitizeData";
 import ViewPassbookFilter from "./viewPassbookComponents/ViewPassbookFilter";
-import { fetchPassbook } from "../../../../services/CustomerServices";
-import { verifyUser } from "../../../../services/AuthenticationServices";
+import { fetchPassbook } from "../../../../services/customerServices";
+import { verifyUser } from "../../../../services/authenticationServices";
 const ViewPassbook = () => {
   const routeParams=useParams();
   const accountNumber=routeParams.accountNumber;
@@ -19,7 +19,6 @@ const ViewPassbook = () => {
   const to = searchParams.get("to") || "";
   const sortBy = searchParams.get("sortBy") || "id";
   const direction=searchParams.get("direction") || "asc";
-  const [searchCount,setSearchCount]=useState(-1);
   const [transactions, setTransactions] = useState([]);
   const [isUser,setIsUser]=useState();
   const getAllTransactions = async () => {
@@ -70,8 +69,7 @@ const ViewPassbook = () => {
             <button
               className="button"
               onClick={() => {
-                navigate(searchCount);
-                setSearchCount(-1);
+                navigate(-1);
               }}
             >
               Back
@@ -80,15 +78,11 @@ const ViewPassbook = () => {
           <div className="title">View Passbook</div>
           <ViewPassbookFilter
             dataList={transactions.content && transactions.content.length > 0 ? Object.keys(transactions.content[0]) : []}
-            setSearchCount={setSearchCount}
-            searchCount={searchCount}
             searchParams={searchParams}
             setSearchParams={setSearchParams}
           />
           <Table
             data={transactions}
-            setSearchCount={setSearchCount}
-            searchCount={searchCount}
             searchParams={searchParams}
             setSearchParams={setSearchParams}
           />

@@ -2,11 +2,15 @@ import axios from "axios";
 import { AlreadyAssigned, InternalServerError, NotFoundError } from "../utils/error/ApiError";
 export const getAllCustomers = async (page, size, sortBy, direction) => {
   try {
+    const token=localStorage.getItem("authToken");
+    if(!token){
+      throw new Error("Authentication token not found. Please log in again.");
+    }
     const response = await axios.get(
       `http://localhost:8080/api/bank/admin/customers`,
       {
         headers: {
-          authorization: `Bearer ${localStorage.getItem("authToken")}`,
+          authorization: `Bearer ${token}`,
         },
         params: { page, size, sortBy, direction },
       }
@@ -31,11 +35,15 @@ export const getAllTransactions = async (
   direction
 ) => {
   try {
+    const token=localStorage.getItem("authToken");
+    if(!token){
+      throw new Error("Authentication token not found. Please log in again.");
+    }
     const response = await axios.get(
       `http://localhost:8080/api/bank/admin/transactions`,
       {
         headers: {
-          authorization: `Bearer ${localStorage.getItem("authToken")}`,
+          authorization: `Bearer ${token}`,
         },
         params: { from, to, page, size, sortBy, direction },
       }
@@ -51,12 +59,16 @@ export const getAllTransactions = async (
     }
   }
 };
-export const GetCustomerById = async(customerID) => {
+export const getCustomerById = async(customerID) => {
   try {
+    const token=localStorage.getItem("authToken");
+    if(!token){
+      throw new Error("Authentication token not found. Please log in again.");
+    }
     const response = await axios.get(`http://localhost:8080/api/bank/admin/customers/${customerID}`,
       {
         headers: {
-          authorization: `Bearer ${localStorage.getItem("authToken")}`,
+          authorization: `Bearer ${token}`,
           },
         }
         );
@@ -72,8 +84,12 @@ export const GetCustomerById = async(customerID) => {
       }
     }
 };
-export const CreateCustomer = async (firstName, lastName, userId) => {
+export const createCustomer = async (firstName, lastName, userId) => {
     try {
+      const token=localStorage.getItem("authToken");
+    if(!token){
+      throw new Error("Authentication token not found. Please log in again.");
+    }
       const response = await axios.post(
         `http://localhost:8080/api/bank/admin/customers/${userId}`,
         {
@@ -82,7 +98,7 @@ export const CreateCustomer = async (firstName, lastName, userId) => {
         },
         {
           headers: {
-            Authorization: `Bearer ${localStorage.getItem("authToken")}`,
+            Authorization: `Bearer ${token}`,
           },
         }
       );
@@ -101,14 +117,18 @@ export const CreateCustomer = async (firstName, lastName, userId) => {
     }
   };
   
-  export const CreateAccount = async (bankId, customerId) => {
+  export const createAccount = async (bankId, customerId) => {
     try {
+      const token=localStorage.getItem("authToken");
+    if(!token){
+      throw new Error("Authentication token not found. Please log in again.");
+    }
       const response = await axios.post(
         `http://localhost:8080/api/bank/admin/banks/${bankId}/customers/${customerId}/accounts`,
         {}, 
         {
           headers: {
-            Authorization: `Bearer ${localStorage.getItem("authToken")}`,
+            Authorization: `Bearer ${token}`,
             'Content-Type': 'application/json',
           }
         }
@@ -127,14 +147,18 @@ export const CreateCustomer = async (firstName, lastName, userId) => {
       }
     }
   };
-export const ActivateCustomer = async (customerID) => {
+export const activateCustomer = async (customerID) => {
   try {
+    const token=localStorage.getItem("authToken");
+    if(!token){
+      throw new Error("Authentication token not found. Please log in again.");
+    }
     const response = await axios.put(
       `http://localhost:8080/api/bank/admin/customers/${customerID}/activate`,
       {},
       {
         headers: {
-          Authorization: `Bearer ${localStorage.getItem("authToken")}`,
+          Authorization: `Bearer ${token}`,
         },
       }
     );
@@ -153,13 +177,18 @@ export const ActivateCustomer = async (customerID) => {
   }
 };
 
-export const GetUserById = async (userID) => {
+export const getUserById = async (userID) => {
   try {
+    const token=localStorage.getItem("authToken");
+    if(!token){
+      throw new Error("Authentication token not found. Please log in again.");
+    }
+
     const response = await axios.get(
       `http://localhost:8080/api/bank/admin/users/${userID}`,
       {
         headers: {
-          Authorization: `Bearer ${localStorage.getItem("authToken")}`,
+          Authorization: `Bearer ${token}`,
         },
       }
     );
@@ -175,13 +204,17 @@ export const GetUserById = async (userID) => {
   }
 };
 
-export const DeactivateCustomer = async (customerID) => {
+export const deactivateCustomer = async (customerID) => {
   try {
+    const token=localStorage.getItem("authToken");
+    if(!token){
+      throw new Error("Authentication token not found. Please log in again.");
+    }
     const response = await axios.delete(
       `http://localhost:8080/api/bank/admin/customers/${customerID}/deactivate`,
       {
         headers: {
-          Authorization: `Bearer ${localStorage.getItem("authToken")}`,
+          Authorization: `Bearer ${token}`,
         },
       }
     );

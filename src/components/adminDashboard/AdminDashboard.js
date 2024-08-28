@@ -1,10 +1,10 @@
 import React, { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 import "./AdminDashboard.css";
-import Modal from "../../utils/Modal/Modal";
-import AccountModal from "../../utils/Modal/AccountModal";
-import { GetUserById, GetCustomerById } from "../../services/AdminServices";
-import { verifyAdmin } from "../../services/AuthenticationServices";
+import Modal from "../adminDashboard/adminComponents/addCustomer/Modal";
+import AccountModal from "./adminComponents/addBankAccount/AccountModal";
+import { getUserById, getCustomerById } from "../../services/adminServices";
+import { verifyAdmin } from "../../services/authenticationServices";
 
 
 const AdminDashboard = () => {
@@ -29,7 +29,7 @@ const AdminDashboard = () => {
 
   const handleAddCustomer = async () => {
     try {
-      const response = await GetUserById(userId);
+      const response = await getUserById(userId);
       if (response) {
         navigate(`/admin-dashboard/add-customer/${userId}`);
         handleCloseModal();
@@ -47,7 +47,7 @@ const AdminDashboard = () => {
 
   const handleAddAccount = async () => {
     try {
-      const response = await GetCustomerById(customerId);
+      const response = await getCustomerById(customerId);
       if (response) {
         navigate(`/admin-dashboard/bank/${bankId}/customer/${customerId}/account`);
         handleCloseAccountModal();

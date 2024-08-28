@@ -2,7 +2,7 @@ import React from 'react';
 import { useNavigate, useParams } from 'react-router-dom';
 import './ConfirmAccountCreation.css';
 import { success, failure } from '../../../../utils/Toast';
-import { CreateAccount } from '../../../../services/AdminServices';
+import { createAccount } from '../../../../services/adminServices';
 import { ToastContainer } from 'react-toastify';
 import { useState } from 'react';
 
@@ -16,7 +16,7 @@ const ConfirmAccountCreation = () => {
   const handleConfirm = async () => {
     setLoading(true);
     try {
-      const response = await CreateAccount(bankId, customerId);
+      const response = await createAccount(bankId, customerId);
       console.log(response);
       if (response) {
         success("Account Created Successfully");

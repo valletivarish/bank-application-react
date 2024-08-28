@@ -1,8 +1,15 @@
-import React from "react";
+import React, { useState,useEffect } from "react";
 import "./ViewCustomersFilter.css";
 
 const ViewCustomersFilter = (props) => {
-  const { data, setSearchParams, searchParams,setSearchCount,searchCount } = props;
+  const { data, setSearchParams, searchParams } = props;
+  const [sortBy, setSortBy] = useState(searchParams.get("sortBy") || "Sort By");
+  const [direction, setDirection] = useState(searchParams.get("direction") || "Direction");
+
+  useEffect(() => {
+    setSortBy(searchParams.get("sortBy") || "Sort By");
+    setDirection(searchParams.get("direction") || "Direction");
+  }, [searchParams]);
   let options = [];
 
   const keyMapping = {
@@ -24,26 +31,20 @@ const ViewCustomersFilter = (props) => {
     });
   }
   const search = () => {
-    const sortByValue = document.querySelector("select[name='sortBy']").value;
-    const directionValue = document.querySelector(
-      "select[name='direction']"
-    ).value;
     const currentParams = Object.fromEntries(searchParams);
-    if (sortByValue && sortByValue !== "Sort By") {
-      currentParams.sortBy = sortByValue;
+    if (sortBy && sortBy !== "Sort By") {
+      currentParams.sortBy = sortBy;
     }
-    if (directionValue && directionValue !== "Direction") {
-      currentParams.direction = directionValue;
+    if (direction && direction !== "Direction") {
+      currentParams.direction = direction;
     }
     setSearchParams(currentParams);
-    setSearchCount(searchCount-1);
   };
 
   const reset = () => {
-    document.querySelector("select[name='sortBy']").value="";
-    document.querySelector("select[name='direction']").value="";
+    setSortBy("Sort By")
+    setDirection("Direction")
     setSearchParams([]);
-    setSearchCount(searchCount-1);
   };
 
   return (
@@ -56,6 +57,8 @@ const ViewCustomersFilter = (props) => {
             aria-label="Sort By"
             name="sortBy"
             id="sortBy"
+            value={sortBy}
+            onChange={(e)=>setSortBy(e.target.value)}
           >
             <option value="" disabled >
               Sort By
@@ -70,6 +73,10 @@ const ViewCustomersFilter = (props) => {
             aria-label="Direction"
             name="direction"
             id="direction"
+            value={direction}
+            onChange={(e)=>{
+              setDirection(e.target.value)
+            }}
           >
             <option value="" disabled>
               Direction

@@ -1,10 +1,11 @@
 import React, { useRef } from "react";
 import { Link, useNavigate } from "react-router-dom";
-import { signup } from "../services/AuthenticationServices";
+import { signup } from "../../services/authenticationServices";
 import "./Register.css";
 import "react-toastify/dist/ReactToastify.css";
-import { success, failure } from "../utils/Toast";
+import { success, failure } from "../../utils/Toast";
 import { ToastContainer } from "react-toastify";
+import validator from "validator";
 
 const Register = () => {
   const navigate = useNavigate();
@@ -21,6 +22,19 @@ const Register = () => {
     const admin = formRef.current.querySelector(
       "input[name='isAdmin']"
     ).checked;
+    if(!validator.isAlpha(name)){
+      failure("Invalid Name");
+    }
+    if(!validator.isEmail(email)){
+      failure("Invalid Email");
+      return;
+    }
+    if(!validator.isStrongPassword(password,{minLength:8,minUppercase:1,minLowercase:1,minSymbols:1})){
+      alert(
+        "Password should have \n1. minimum eight characters \n2. atleast one upper case letter\n3. atleast one lower case letter\n4. atleast one number\n5. atleast one special character"
+      );
+      return;
+    }
 
     try {
       const response = await signup({ name, email, password, admin });

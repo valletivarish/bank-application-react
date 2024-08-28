@@ -32,11 +32,15 @@ export const fetchPassbook = async (
   accountNumber
 ) => {
   try {
+    const token=localStorage.getItem("authToken");
+    if(!token){
+      throw new Error("Authentication token not found. Please log in again.");
+    }
     const response = await axios.get(
       `http://localhost:8080/api/bank/customers/passbook/${accountNumber}`,
       {
         headers: {
-          Authorization: "Bearer " + localStorage.getItem("authToken"),
+          Authorization: "Bearer " + token,
         },
         params: {
           from: from,
@@ -62,11 +66,15 @@ export const fetchPassbook = async (
 
 export const fetchAllAccounts = async () => {
   try {
+    const token=localStorage.getItem("authToken");
+    if(!token){
+      throw new Error("Authentication token not found. Please log in again.");
+    }
     const response = await axios.get(
       "http://localhost:8080/api/bank/customers/accounts",
       {
         headers: {
-          Authorization: "Bearer " + localStorage.getItem("authToken"),
+          Authorization: "Bearer " + token,
         },
       }
     );
@@ -88,12 +96,16 @@ export const performTransaction = async (
   amount
 ) => {
   try {
+    const token=localStorage.getItem("authToken");
+    if(!token){
+      throw new Error("Authentication token not found. Please log in again.");
+    }
     const response = await axios.post(
       "http://localhost:8080/api/bank/customers/transactions",
       null,
       {
         headers: {
-          Authorization: "Bearer " + localStorage.getItem("authToken"),
+          Authorization: "Bearer " + token,
         },
         params: {
           senderAccountNumber: senderAccount,
@@ -122,12 +134,16 @@ export const performTransaction = async (
 
 export const depositAmount = async (accountNumber, amount) => {
   try {
+    const token=localStorage.getItem("authToken");
+    if(!token){
+      throw new Error("Authentication token not found. Please log in again.");
+    }
     const response = await axios.put(
       `http://localhost:8080/api/bank/customers/${accountNumber}/deposit`,
       null,
       {
         headers: {
-          Authorization: `Bearer ${localStorage.getItem("authToken")}`,
+          Authorization: `Bearer ${token}`,
         },
         params: {
           amount: amount,
@@ -153,6 +169,10 @@ export const depositAmount = async (accountNumber, amount) => {
 };
 export const updateUser=async(firstName,lastName,email)=>{
   try{
+    const token=localStorage.getItem("authToken");
+    if(!token){
+      throw new Error("Authentication token not found. Please log in again.");
+    }
     const response=await axios.put(`http://localhost:8080/api/bank/customers/profile`,
       {
         firstName:firstName,
@@ -160,7 +180,7 @@ export const updateUser=async(firstName,lastName,email)=>{
         email:email
       },{
       headers:{
-        Authorization:`Bearer ${localStorage.getItem("authToken")}`
+        Authorization:`Bearer ${token}`
     }})
     console.log(firstName,lastName,email)
     return response;

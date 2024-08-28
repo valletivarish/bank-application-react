@@ -1,16 +1,15 @@
 import React, { useEffect, useState } from "react";
 import { sanitizeData } from "../../../../utils/helpers/SanitizeData";
-import { getAllCustomers as fetchAllCustomers } from "../../../../services/AdminServices";
+import { getAllCustomers as fetchAllCustomers } from "../../../../services/adminServices";
 import Table from "../../../../sharedComponents/Table/Table";
 import { useNavigate, useSearchParams } from "react-router-dom";
 import "./ViewCustomers.css";
 import ViewCustomersFilter from "../viewCustomers/ViewCustomersFilter";
-import { verifyAdmin } from "../../../../services/AuthenticationServices";
+import { verifyAdmin } from "../../../../services/authenticationServices";
 
 const ViewCustomers = () => {
   const navigate = useNavigate();
   const [customers, setCustomers] = useState([]);
-  const [searchCount, setSearchCount] = useState(-1);
   const [searchParams, setSearchParams] = useSearchParams();
   const page = parseInt(searchParams.get("page")) || 0;
   const size = parseInt(searchParams.get("size")) || 5;
@@ -67,8 +66,7 @@ const ViewCustomers = () => {
             <button
               className="button"
               onClick={() => {
-                navigate(searchCount);
-                setSearchCount(-1);
+                navigate(-1);
               }}
             >
               Back
@@ -77,15 +75,11 @@ const ViewCustomers = () => {
           <div className="title">View Customers</div>
           <ViewCustomersFilter
             data={customers}
-            setSearchCount={setSearchCount}
-            searchCount={searchCount}
             searchParams={searchParams}
             setSearchParams={setSearchParams}
           />
           <Table
             data={customers}
-            setSearchCount={setSearchCount}
-            searchCount={searchCount}
             searchParams={searchParams}
             setSearchParams={setSearchParams}
           />

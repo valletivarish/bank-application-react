@@ -1,8 +1,15 @@
 import React from "react";
 import "./Dropdown.css";
+import { useState,useEffect } from "react";
 const Dropdown = (props) => {
-  const { setSearchParams, searchParams, setSearchCount, searchCount } =
+  const { setSearchParams, searchParams } =
     props;
+    const [size,setSize]=useState(parseInt(searchParams.get("size")) || 5);
+
+    useEffect(()=>{
+      setSize(parseInt(searchParams.get("size")) || 5);
+    },[searchParams])
+
   const options = () => {
     const sizes = [];
     for (let i = 1; i < props.data.totalElements; i++) {
@@ -21,7 +28,6 @@ const Dropdown = (props) => {
     updatedSearchParams.size = e.target.value;
     updatedSearchParams.page=0;
     setSearchParams(updatedSearchParams);
-    setSearchCount(searchCount-1);
   };
 
   return (
@@ -31,6 +37,7 @@ const Dropdown = (props) => {
         className="form-select dropdown"
         aria-label="Select page size"
         onChange={handleChange}
+        value={size}
       >
         <option value="" disabled selected>
           Element size

@@ -1,12 +1,13 @@
 import React, { useState, useEffect } from 'react';
-import { getUserByEmail } from '../../../../services/CustomerServices';
-import { success } from '../../../../utils/Toast'; 
+import { getUserByEmail } from '../../../../services/customerServices';
+import { failure, success } from '../../../../utils/Toast'; 
 import { ToastContainer } from 'react-toastify';
 import './Profile.css';
 import { FaEdit } from 'react-icons/fa'; 
-import { updateUser } from '../../../../services/CustomerServices';
+import { updateUser } from '../../../../services/customerServices';
 import { useNavigate } from 'react-router-dom';
-import { verifyUser } from '../../../../services/AuthenticationServices';
+import { verifyUser } from '../../../../services/authenticationServices';
+import validator from 'validator';
 
 const Profile = () => {
   const navigate=useNavigate();
@@ -37,6 +38,16 @@ const Profile = () => {
 
   const handleSubmit = async (e) => {
     e.preventDefault();
+    if(!validator.isAlpha(user.firstName)){
+      failure("Please enter a valid first name");
+      return;
+    }
+    if(!validator.isAlpha(user.lastName)){
+      failure("Please enter a valid last name");
+      return;
+    }
+
+
     try {
       await updateUser(user.firstName,user.lastName,user.email);
       success("Profile updated successfully!");
@@ -83,6 +94,7 @@ const Profile = () => {
               value={user.firstName || ""}
               disabled={editableField !== "firstName"}
               onChange={handleChange}
+              required
             />
             <FaEdit 
               className="edit-icon" 
@@ -100,6 +112,7 @@ const Profile = () => {
               value={user.lastName || ""}
               disabled={editableField !== "lastName"}
               onChange={handleChange}
+              required
             />
             <FaEdit 
               className="edit-icon" 
@@ -117,6 +130,7 @@ const Profile = () => {
               value={user.email || ""}
               disabled={editableField !== "email"}
               onChange={handleChange}
+              required
             />
             <FaEdit 
               className="edit-icon" 

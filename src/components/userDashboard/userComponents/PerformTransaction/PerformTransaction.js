@@ -3,11 +3,12 @@ import "./PerformTransaction.css";
 import {
   fetchAllAccounts,
   performTransaction,
-} from "../../../../services/CustomerServices";
+} from "../../../../services/customerServices";
 import { failure, success } from "../../../../utils/Toast";
 import { ToastContainer } from "react-toastify";
 import { useNavigate } from "react-router-dom";
-import { verifyUser } from "../../../../services/AuthenticationServices";
+import { verifyUser } from "../../../../services/authenticationServices";
+import validator from "validator";
 
 const PerformTransaction = () => {
   const [accounts, setAccounts] = useState([]);
@@ -16,6 +17,8 @@ const PerformTransaction = () => {
   const [amount, setAmount] = useState("");
   const [isUser, setIsUser] = useState();
   const [loading, setLoading] = useState(false);
+  const [hasError,setHasError]=useState(false);
+  const [message,setMessage]=useState();
   const navigate = useNavigate();
   useEffect(() => {
     const loadAccounts = async () => {
@@ -23,12 +26,14 @@ const PerformTransaction = () => {
         const data = await fetchAllAccounts();
         setAccounts(data);
       } catch (error) {
-        const statusCode = error.statusCode || "Unknown";
+        // const statusCode = error.statusCode || "Unknown";
         const errorMessage = error.message || "An error occurred";
-        const errorType = error.errorType || "Error";
-        navigate(`/error/${statusCode}`, {
-          state: { status: statusCode, errorMessage, errorType },
-        });
+        // const errorType = error.errorType || "Error";
+        // navigate(`/error/${statusCode}`, {
+        //   state: { status: statusCode, errorMessage, errorType },
+        // });
+        setHasError(true);
+        setMessage(errorMessage)
       }
     };
 
@@ -36,10 +41,13 @@ const PerformTransaction = () => {
   }, []);
 
   const handleSubmit = async (e) => {
-    setLoading(true);
     e.preventDefault();
     if (!senderAccount || !receiverAccount || !amount) {
       failure("All fields are required.");
+      return;
+    }
+    if(!validator.isEmpty(receiverAccount) && !validator.isNumeric(receiverAccount)){
+      failure("Receiver Account Number should be numeric and not empty ");
       return;
     }
     if (isNaN(amount) || amount <= 0) {
@@ -48,6 +56,7 @@ const PerformTransaction = () => {
     }
 
     try {
+      setLoading(true);
       await performTransaction(senderAccount, receiverAccount, amount);
       success("Transaction completed successfully!");
       setSenderAccount("");
@@ -99,6 +108,7 @@ const PerformTransaction = () => {
                 id="senderAccount"
                 className="form-control"
                 value={senderAccount}
+                disabled={hasError}
                 onChange={(e) => setSenderAccount(e.target.value)}
                 required
               >
@@ -117,6 +127,7 @@ const PerformTransaction = () => {
                 id="receiverAccount"
                 className="form-control"
                 value={receiverAccount}
+                disabled={hasError}
                 onChange={(e) => setReceiverAccount(e.target.value)}
                 required
               />
@@ -128,11 +139,13 @@ const PerformTransaction = () => {
                 id="amount"
                 className="form-control"
                 value={amount}
+                disabled={hasError}
                 onChange={(e) => setAmount(e.target.value)}
                 required
               />
             </div>
-            <button type="submit" className="submit-button" disabled={loading}>
+            {hasError && <p style={{color:"red",fontWeight:600,textAlign:"center"}}>{message}</p>}
+            <button type="submit" className="submit-button" disabled={loading || hasError}>
               {loading ? "Processing Transfer..." : "Transfer Funds"}
             </button>
           </form>

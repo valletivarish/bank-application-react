@@ -1,12 +1,12 @@
 import React, { useState, useEffect } from "react";
 import { useParams } from "react-router-dom";
 import {
-  CreateCustomer,
-  GetUserById,
-} from "../../../../services/AdminServices";
+  createCustomer,
+  getUserById,
+} from "../../../../services/adminServices";
 import "./AddCustomer.css";
 import { useNavigate } from "react-router-dom";
-import { verifyAdmin } from "../../../../services/AuthenticationServices";
+import { verifyAdmin } from "../../../../services/authenticationServices";
 
 const AddCustomer = () => {
   const { userId } = useParams();
@@ -20,7 +20,7 @@ const AddCustomer = () => {
     if (userId) {
       const fetchUserData = async () => {
         try {
-          const userEmail = await GetUserById(userId);
+          const userEmail = await getUserById(userId);
           console.log(userEmail);
           setEmail(userEmail);
         } catch (error) {
@@ -52,7 +52,7 @@ const AddCustomer = () => {
     setLoading(true)
     e.preventDefault();
     try {
-      await CreateCustomer(firstName, lastName, userId);
+      await createCustomer(firstName, lastName, userId);
       localStorage.setItem(
         "successDetails",
         JSON.stringify({

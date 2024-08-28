@@ -1,8 +1,22 @@
 import React from "react";
 import "./ViewTransactionFilter.css";
+import { useState,useEffect } from "react";
 
 const ViewTransactionFilter = (props) => {
-  const { setSearchParams, searchParams,setSearchCount,searchCount } = props;
+  const { setSearchParams, searchParams } = props;
+  const [from,setFrom]=useState(searchParams.get("from") || "");
+  const [to,setTo]=useState(searchParams.get("to") || "");
+  const [sortBy,setSortBy]=useState(searchParams.get("sortBy") || "SortBy");
+  const [direction,setDirection]=useState(searchParams.get("direction") || "Direction")
+
+  useEffect(()=>{
+    setFrom(searchParams.get("from") || "");
+    setTo(searchParams.get("to") || "");
+    setSortBy(searchParams.get("sortBy") || "SortBy");
+    setDirection(searchParams.get("direction") || "Direction");
+  },[searchParams])
+
+
   const options = props.dataList
     .filter(
       (key) =>
@@ -32,23 +46,21 @@ const ViewTransactionFilter = (props) => {
     if (sortByValue !== "Sort By") {
       currentParams.sortBy = sortByValue;
     }
-    if(fromValue!=""){
+    if(fromValue!==""){
       currentParams.from=fromValue;
     }
-    if(toValue!=""){
+    if(toValue!==""){
       currentParams.to=toValue;
     }
     setSearchParams(currentParams);
-    setSearchCount(searchCount-1);
   };
 
   const reset = () => {
-    document.querySelector("input[name='from']").value = "";
-    document.querySelector("input[name='to']").value = "";
-    document.querySelector("select[name='sortBy']").value = "Sort By";
-    document.querySelector("select[name='direction']").value = "Direction";
+    setFrom("");
+    setTo("");
+    setSortBy("Sort By");
+    setDirection("Direction");
     setSearchParams([]);
-    setSearchCount(searchCount-1);
   };
 
   return (
@@ -56,11 +68,15 @@ const ViewTransactionFilter = (props) => {
       <div className="filter-container">
         <div className="filter-input">
           <label htmlFor="from">From Date</label>
-          <input type="date" name="from" id="from" />
+          <input type="date" name="from" id="from" value={from} onChange={
+            (e) => setFrom(e.target.value)
+          }/>
         </div>
         <div className="filter-input">
           <label htmlFor="to">To Date</label>
-          <input type="date" name="to" id="to" />
+          <input type="date" name="to" id="to" value={to} onChange={
+            (e) => setTo(e.target.value)
+          } />
         </div>
         <div className="filter-input">
           <label htmlFor="sortBy">Sort By</label>
@@ -69,6 +85,10 @@ const ViewTransactionFilter = (props) => {
             aria-label="Sort By"
             name="sortBy"
             id="sortBy"
+            value={sortBy}
+            onChange={
+              (e) => setSortBy(e.target.value)
+            }
           >
             <option value="Sort By" disabled>
               Sort By
@@ -83,6 +103,10 @@ const ViewTransactionFilter = (props) => {
             aria-label="Direction"
             name="direction"
             id="direction"
+            value={direction}
+            onChange={
+              (e) => setDirection(e.target.value)
+            }
           >
             <option value="Direction" disabled>
               Direction

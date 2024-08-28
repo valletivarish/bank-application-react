@@ -58,10 +58,10 @@ export const signup = async (user) => {
 };
 
 export const verifyAdmin = async (token) => {
-  if (token == null) {
-    return false;
-  }
   try {
+    if(!token){
+      throw new Error("Authentication token not found. Please log in again.");
+    }
     const response = await axios.get(
       `http://localhost:8080/api/auth/verifyAdmin`,
       {
@@ -76,10 +76,10 @@ export const verifyAdmin = async (token) => {
   }
 };
 export const verifyUser = async (token) => {
-  if (token == null) {
-    return false;
-  }
   try {
+    if(!token){
+      throw new Error("Authentication token not found. Please log in again.");
+    }
     const response = await axios.get(
       `http://localhost:8080/api/auth/verifyUser`,
       {

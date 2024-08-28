@@ -1,5 +1,5 @@
-import { ActivateCustomer, DeactivateCustomer } from '../../services/AdminServices';
-import { getAllCustomers } from '../../services/AdminServices';
+import { activateCustomer, deactivateCustomer } from '../../services/adminServices';
+import { getAllCustomers } from '../../services/adminServices';
 export const sanitizeData = (data, keysToBeIncluded, setCustomers) => {
     const keyMapping = {
         customer_id: "Customer ID",
@@ -11,9 +11,9 @@ export const sanitizeData = (data, keysToBeIncluded, setCustomers) => {
     const handleAction = async (customerId, isActive) => {
         try {
             if (isActive) {
-                await DeactivateCustomer(customerId);
+                await deactivateCustomer(customerId);
             } else {
-                await ActivateCustomer(customerId);
+                await activateCustomer(customerId);
             }
             const updatedData = await getAllCustomers();
             if (updatedData && updatedData.content) {

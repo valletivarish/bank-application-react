@@ -3,7 +3,7 @@ import { Pagination as BootstrapPagination } from "react-bootstrap";
 import "./Pagination.css";
 
 const CustomPagination = (props) => {
-  const { data, setSearchParams, searchParams, setSearchCount, searchCount } =
+  const { data, setSearchParams, searchParams} =
     props;
   const { totalPages, page } = data;
 
@@ -21,7 +21,6 @@ const CustomPagination = (props) => {
               const currentParams=Object.fromEntries(searchParams);
               currentParams.page=0;
               setSearchParams(currentParams);
-              setSearchCount(searchCount-1);
             }}
           >
             &lt;&lt;&lt;
@@ -39,7 +38,6 @@ const CustomPagination = (props) => {
               const currentParams = Object.fromEntries(searchParams);
               currentParams.page = page - 1;
               setSearchParams(currentParams);
-              setSearchCount(searchCount-1);
             }}
           >
             &lt;&lt;
@@ -57,7 +55,6 @@ const CustomPagination = (props) => {
               const currentParams = Object.fromEntries(searchParams);
               currentParams.page = i;
               setSearchParams(currentParams);
-              setSearchCount(searchCount-1);
             }}
           >
             {i + 1}
@@ -75,7 +72,6 @@ const CustomPagination = (props) => {
               const currentParams = Object.fromEntries(searchParams);
               currentParams.page = page + 1;
               setSearchParams(currentParams);
-              setSearchCount(searchCount-1);
             }}
           >
             &gt;&gt;
@@ -93,7 +89,6 @@ const CustomPagination = (props) => {
               const currentParams = Object.fromEntries(searchParams);
               currentParams.page = totalPages - 1;
               setSearchParams(currentParams);
-              setSearchCount(searchCount-1);
             }}
           >
             &gt;&gt;&gt;

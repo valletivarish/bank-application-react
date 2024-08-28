@@ -1,5 +1,5 @@
 import React from 'react';
-import './Modal.css';
+import '../../../../utils/Modal/Modal.css';
 import { Modal as BootstrapModal, Button } from 'react-bootstrap';
 
 const AccountModal = ({ show, handleClose, handleAddAccount, customerId, setCustomerId, bankId, setBankId }) => {

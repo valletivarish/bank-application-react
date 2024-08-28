@@ -4,7 +4,7 @@ import CustomPagination from "../Pagination/CustomPagination";
 import CustomDropodown from "../Dropdown/CustomDropdown";
 
 const Table = (props) => {
-  const { data, setSearchParams, searchParams, setSearchCount, searchCount } =
+  const { data, setSearchParams, searchParams } =
     props;
   const content = data.content;
 
@@ -33,16 +33,12 @@ const Table = (props) => {
         </table>
         <div className="pagination-section">
           <CustomDropodown
-            setSearchCount={setSearchCount}
-            searchCount={searchCount}
             searchParams={searchParams}
             setSearchParams={setSearchParams}
             data={data}
             className="custom-dropdown"
           />
           <CustomPagination
-            setSearchCount={setSearchCount}
-            searchCount={searchCount}
             searchParams={searchParams}
             setSearchParams={setSearchParams}
             data={data}
