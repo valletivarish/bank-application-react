@@ -17,41 +17,62 @@ const PerformTransaction = () => {
   const [amount, setAmount] = useState("");
   const [isUser, setIsUser] = useState();
   const [loading, setLoading] = useState(false);
-  const [hasError,setHasError]=useState(false);
-  const [message,setMessage]=useState();
+  const [hasError, setHasError] = useState(false);
+  const [message, setMessage] = useState();
+  const [validationError, setValidationError] = useState(false);
   const navigate = useNavigate();
+
   useEffect(() => {
     const loadAccounts = async () => {
       try {
         const data = await fetchAllAccounts();
         setAccounts(data);
       } catch (error) {
-        // const statusCode = error.statusCode || "Unknown";
         const errorMessage = error.message || "An error occurred";
-        // const errorType = error.errorType || "Error";
-        // navigate(`/error/${statusCode}`, {
-        //   state: { status: statusCode, errorMessage, errorType },
-        // });
         setHasError(true);
-        setMessage(errorMessage)
+        setMessage(errorMessage);
       }
     };
 
     loadAccounts();
   }, []);
 
+  const validateReceiverAccount = (value) => {
+    if (
+      validator.isEmpty(value) ||
+      !validator.isNumeric(value) ||
+      parseInt(value) <= 0
+    ) {
+      setValidationError(true);
+      setMessage("Receiver Account Number should be numeric, non-negative, and not empty.");
+    } else {
+      setValidationError(false);
+      setMessage("");
+    }
+    setReceiverAccount(value);
+  };
+
+  const validateAmount = (value) => {
+    if (!validator.isNumeric(value) || parseFloat(value) <= 0) {
+      setValidationError(true);
+      setMessage("Amount must be a positive number.");
+    } else {
+      setValidationError(false);
+      setMessage("");
+    }
+    setAmount(value);
+  };
+
   const handleSubmit = async (e) => {
     e.preventDefault();
+
     if (!senderAccount || !receiverAccount || !amount) {
       failure("All fields are required.");
       return;
     }
-    if(!validator.isEmpty(receiverAccount) && !validator.isNumeric(receiverAccount)){
-      failure("Receiver Account Number should be numeric and not empty ");
-      return;
-    }
-    if (isNaN(amount) || amount <= 0) {
-      failure("Amount must be a positive number.");
+
+    if (validationError) {
+      failure(message);
       return;
     }
 
@@ -69,11 +90,11 @@ const PerformTransaction = () => {
       navigate(`/error/${statusCode}`, {
         state: { status: statusCode, errorMessage, errorType },
       });
-    }
-    finally{
+    } finally {
       setLoading(false);
     }
   };
+
   useEffect(() => {
     const checkUser = async () => {
       const response = await verifyUser(localStorage.getItem("authToken"));
@@ -86,6 +107,7 @@ const PerformTransaction = () => {
 
     checkUser();
   }, [navigate]);
+
   return (
     <div className="perform-transaction-container">
       {isUser && (
@@ -128,7 +150,7 @@ const PerformTransaction = () => {
                 className="form-control"
                 value={receiverAccount}
                 disabled={hasError}
-                onChange={(e) => setReceiverAccount(e.target.value)}
+                onChange={(e) => validateReceiverAccount(e.target.value)}
                 required
               />
             </div>
@@ -140,12 +162,20 @@ const PerformTransaction = () => {
                 className="form-control"
                 value={amount}
                 disabled={hasError}
-                onChange={(e) => setAmount(e.target.value)}
+                onChange={(e) => validateAmount(e.target.value)}
                 required
               />
             </div>
-            {hasError && <p style={{color:"red",fontWeight:600,textAlign:"center"}}>{message}</p>}
-            <button type="submit" className="submit-button" disabled={loading || hasError}>
+            {validationError && (
+              <p style={{ color: "red", fontWeight: 600, textAlign: "center" }}>
+                {message}
+              </p>
+            )}
+            <button
+              type="submit"
+              className="submit-button"
+              disabled={loading || hasError || validationError}
+            >
               {loading ? "Processing Transfer..." : "Transfer Funds"}
             </button>
           </form>

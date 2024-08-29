@@ -2,46 +2,44 @@ import React, { useState, useEffect } from "react";
 import {
   fetchAllAccounts,
   depositAmount,
-} from "../../../../services/customerServices"; // Adjust the import path as needed
+} from "../../../../services/customerServices";
 import { failure, success } from "../../../../utils/Toast";
 import { ToastContainer } from "react-toastify";
 import { useNavigate } from "react-router-dom";
 import "./Deposit.css";
 import { verifyUser } from "../../../../services/authenticationServices";
+import validator from "validator";
 
 const Deposit = () => {
   const [accounts, setAccounts] = useState([]);
   const [selectedAccount, setSelectedAccount] = useState("");
   const [amount, setAmount] = useState("");
   const [isUser, setIsUser] = useState();
-  const [loading,setLoading]=useState();
+  const [loading, setLoading] = useState();
   const navigate = useNavigate();
-  const [hasError,setHasError]=useState(false);
-  const [message,setMessage]=useState();
+  const [hasError, setHasError] = useState(false);
+  const [message, setMessage] = useState("");
+  const [validationError, setValidationError] = useState(false);
 
   useEffect(() => {
     loadAccounts();
   }, []);
+
   const loadAccounts = async () => {
     try {
       const data = await fetchAllAccounts();
       setAccounts(data);
     } catch (error) {
-      const errorMessage = error.message || "An error occurred";
+      const errorMessage = error.message || "Failed to load accounts.";
       setHasError(true);
       setMessage(errorMessage);
     }
   };
 
   const handleSubmit = async (e) => {
-
     e.preventDefault();
     if (!selectedAccount || !amount) {
       failure("All fields are required.");
-      return;
-    }
-    if (isNaN(amount) || amount <= 0) {
-      failure("Amount must be a positive number.");
       return;
     }
 
@@ -53,16 +51,31 @@ const Deposit = () => {
       setAmount("");
     } catch (error) {
       const statusCode = error.statusCode || "Unknown";
-      const errorMessage = error.message || "An error occurred";
+      const errorMessage = error.message || "An error occurred.";
       const errorType = error.errorType || "Error";
       navigate(`/error/${statusCode}`, {
         state: { status: statusCode, errorMessage, errorType },
       });
-    }
-    finally{
+    } finally {
       setLoading(false);
     }
   };
+
+  const validateAmount = (value) => {
+    if (!validator.isNumeric(value) || parseFloat(value) <= 0 || parseFloat(value)<500) {
+      setValidationError(true);
+      setMessage("Amount must be a positive numeric value and greater than 500.");
+    }else if (value.includes(".") && value.split(".")[1].length > 2) {
+      setValidationError(true);
+      setMessage("Amount cannot have more than two decimal places.");
+    }  
+    else {
+      setValidationError(false);
+      setMessage("");
+    }
+    setAmount(value);
+  };
+
   useEffect(() => {
     const checkUser = async () => {
       const response = await verifyUser(localStorage.getItem("authToken"));
@@ -119,13 +132,23 @@ const Deposit = () => {
                 className="form-control"
                 value={amount}
                 disabled={hasError}
-                onChange={(e) => setAmount(e.target.value)}
+                onChange={(e) => validateAmount(e.target.value)}
                 required
               />
             </div>
-            {hasError && <p style={{color:"red",fontWeight:600,textAlign:"center"}}>{message}</p>}
-            <button type="submit" className="submit-button" disabled={loading || hasError}>
-            {loading ? "Hang Tight, We're Processing Your Deposit..." : "Make Deposit"}
+            {message && (
+              <p style={{ color: "red", fontWeight: 600, textAlign: "center" }}>
+                {message}
+              </p>
+            )}
+            <button
+              type="submit"
+              className="submit-button"
+              disabled={loading || hasError || validationError}
+            >
+              {loading
+                ? "Hang Tight, We're Processing Your Deposit..."
+                : "Make Deposit"}
             </button>
           </form>
           <ToastContainer />
